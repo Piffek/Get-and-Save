@@ -1,1 +1,2 @@
-cos cos cos
+ADD 10 10
+DIV 10 5

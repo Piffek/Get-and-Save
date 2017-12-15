@@ -3,11 +3,12 @@ require_once __DIR__.'/Autoload.php';
 
 $Location = new Location();
 
-
-$nameOfDirectory = $Location->setPath('C:\Users/Admin/Desktop');
+$nameOfDirectory = $Location->setPath(__DIR__.'./');
 
 $file = new File($Location);
 
-$nameOfFile = $file->setName('test.txt');
+$file->setFromFile('test.txt');
 
-echo $file->getContentFromFile();
+$file->setToFile('afterOperation.txt');
+
+$file->getContentFromFile();
