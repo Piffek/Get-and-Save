@@ -10,10 +10,6 @@ class File implements FileInterface
 
     private $line;
 
-    public $DIV = 0;
-
-    public $ADD = 0;
-
     public function __construct(Location $location)
     {
         $this->location = $location;
@@ -44,7 +40,7 @@ class File implements FileInterface
      *
      * @return \File
      */
-    public function getContentFromFile() : File
+    public function getContentFromFile()
     {
         $content = $this->makeLocationToFile($this->location->getPath(), $this->from);
 
@@ -78,17 +74,18 @@ class File implements FileInterface
     {
         $paramInLine = explode(' ', $line);
 
-        $firstParamInLine = array_shift($paramInLine);
+        $processing = array_shift($paramInLine);
 
         $newContent = '';
 
-        switch ($firstParamInLine) {
+        $result = 0;
+        switch ($processing) {
             case 'ADD':
                 foreach ($paramInLine as $param) {
-                    (string) $this->ADD += (int) $param;
+                    (string) $result += (int) $param;
                 }
 
-                $newContent .= 'ADD = '.$this->ADD."\n";
+                $newContent .= $processing.' = '.$result."\n";
                 break;
             case 'DIV':
                 $array = [];
@@ -96,18 +93,15 @@ class File implements FileInterface
                     array_push($array, $param);
                 }
 
-                if ((int) $array[1] === 0) {
-                    (string) $this->DIV = 'DIVISION BY ZERO!';
-                } else {
-                    (string) $this->DIV = (string) $array[0] / (string) $array[1];
-                }
+                $result = $this->checkSecondParameter($array);
 
-                $newContent .= 'DIV = '.$this->DIV."\n";
+                $newContent .= $processing.' = '.$result."\n";
                 break;
         }
 
         return $newContent;
     }
+
 
     /**
      * Save new content to file.
@@ -122,13 +116,28 @@ class File implements FileInterface
     }
 
     /**
+     * If second parameter is ZERO, return statement.
+     *
+     * @param array $array
+     * @return string
+     */
+    private function checkSecondParameter(array $array) : string
+    {
+        if ((int) $array[1] === 0) {
+            return 'DIVISION BY ZERO!';
+        } else {
+            return (string) $array[0] / (string) $array[1];
+        }
+    }
+
+    /**
      * make file location.
      *
      * @param string $path
      * @param string $direction TO/FROM
      * @return string
      */
-    private function makeLocationToFile(string $path, string $direction) : string
+    private function makeLocationToFile(string $path, string $direction): string
     {
         $locationOfFile = '%s/%s';
 
