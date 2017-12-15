@@ -1,5 +1,4 @@
 <?php
-require __DIR__.'/FileInterface.php';
 
 class File implements FileInterface
 {
@@ -24,7 +23,7 @@ class File implements FileInterface
     public function getContentFromFile()
     {
         $locationOfFile = '%s/%s';
-        $content = sprintf($locationOfFile, $this->location->getName(), $this->name);
+        $content = sprintf($locationOfFile, $this->location->getPath(), $this->name);
         return file_get_contents($content);
     }
 

@@ -2,15 +2,15 @@
 
 class Location
 {
-    public $name;
+    public $path;
 
-    public function setName(string $name)
+    public function setPath(string $name)
     {
-        $this->name = $name;
+        $this->path = $name;
     }
 
-    public function getName()
+    public function getPath()
     {
-        return $this->name;
+        return $this->path;
     }
 }
