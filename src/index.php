@@ -7,8 +7,8 @@ $nameOfDirectory = $Location->setPath(__DIR__.'./');
 
 $file = new File($Location);
 
-$file->setFromFile('test.txt');
+$file->fromFile('test.txt');
 
-$file->setToFile('afterOperation.txt');
+$file->toFile('afterOperation.txt');
 
 $file->getContentFromFile();

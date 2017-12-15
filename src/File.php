@@ -19,12 +19,12 @@ class File implements FileInterface
         $this->location = $location;
     }
 
-    public function setFromFile(string $name)
+    public function fromFile(string $name)
     {
         $this->from = $name;
     }
 
-    public function setToFile(string $name)
+    public function toFile(string $name)
     {
         $this->to = $name;
     }
@@ -51,24 +51,29 @@ class File implements FileInterface
 
     public function operation(String $line)
     {
-        $arrayOfParam = explode(' ', $line);
+        $paramInLine = explode(' ', $line);
 
-        $firstParam = array_shift($arrayOfParam);
+        $firstParamInLine = array_shift($paramInLine);
 
-        switch ($firstParam) {
+        switch ($firstParamInLine) {
             case 'ADD':
-                foreach ($arrayOfParam as $param) {
-                    $this->ADD += (int) $param;
+                foreach ($paramInLine as $param) {
+                    (string) $this->ADD += (int) $param;
                 }
 
                 return 'ADD = '.$this->ADD;
                 break;
             case 'DIV':
                 $array = [];
-                foreach ($arrayOfParam as $param) {
+                foreach ($paramInLine as $param) {
                     array_push($array, $param);
                 }
-                $this->DIV = $array[0] / $array[1];
+
+                if ((int) $array[1] === 0) {
+                    (string) $this->DIV = 'DIVISION BY ZERO!';
+                } else {
+                    (string) $this->DIV = (string) $array[0] / (string) $array[1];
+                }
 
                 return 'DIV = '.$this->DIV;
                 break;
@@ -82,7 +87,7 @@ class File implements FileInterface
 
         $paramToSave = '';
         foreach ($param as $result) {
-            $paramToSave .= $result . "\n";
+            $paramToSave .= $result."\n";
         }
 
         file_put_contents($content, $paramToSave);
