@@ -2,7 +2,7 @@
 
 class Location
 {
-    public $path;
+    private $path;
 
     public function setPath(string $name)
     {

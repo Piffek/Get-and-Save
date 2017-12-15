@@ -39,21 +39,23 @@ class File implements FileInterface
 
     public function explodeContentToArray(String $content)
     {
-        $param = [];
+        $param = '';
         $this->line = explode("\n", $content);
 
         foreach ($this->line as $oneLine) {
-            array_push($param, $this->operation($oneLine));
+            $param .= $this->operation($oneLine);
         }
 
         $this->saveNewContentToFile($param);
     }
 
-    public function operation(String $line)
+    public function operation(String $line) : string
     {
         $paramInLine = explode(' ', $line);
 
         $firstParamInLine = array_shift($paramInLine);
+
+        $newContent = '';
 
         switch ($firstParamInLine) {
             case 'ADD':
@@ -61,7 +63,7 @@ class File implements FileInterface
                     (string) $this->ADD += (int) $param;
                 }
 
-                return 'ADD = '.$this->ADD;
+                $newContent .= 'ADD = '.$this->ADD."\n";
                 break;
             case 'DIV':
                 $array = [];
@@ -75,21 +77,19 @@ class File implements FileInterface
                     (string) $this->DIV = (string) $array[0] / (string) $array[1];
                 }
 
-                return 'DIV = '.$this->DIV;
+                $newContent .= 'DIV = '.$this->DIV."\n";
                 break;
         }
+
+        return $newContent;
     }
 
-    public function saveNewContentToFile(array $param)
+    public function saveNewContentToFile(string $param)
     {
         $locationOfFile = '%s/%s';
         $content = sprintf($locationOfFile, $this->location->getPath(), $this->to);
 
-        $paramToSave = '';
-        foreach ($param as $result) {
-            $paramToSave .= $result."\n";
-        }
 
-        file_put_contents($content, $paramToSave);
+        file_put_contents($content, $param);
     }
 }

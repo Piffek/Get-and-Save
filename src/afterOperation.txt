@@ -1,2 +1,2 @@
 ADD = 21
-DIV = 2
+DIV = DIVISION BY ZERO!
