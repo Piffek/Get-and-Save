@@ -74,7 +74,6 @@ class File implements FileInterface
     {
         $paramInLine = explode(' ', $line);
 
-
         $processing = array_shift($paramInLine);
 
         $result = 0;
@@ -86,28 +85,25 @@ class File implements FileInterface
 
                 break;
             case 'DIV':
-                try{
-                    $array = [];
-                    foreach ($paramInLine as $param) {
-                        array_push($array, $param);
-                    }
+                $array = [];
+                foreach ($paramInLine as $param) {
+                    array_push($array, $param);
+                }
+
+                try {
                     $result = (int) $array[0] / (int) $array[1];
-                }catch(DivisionByZeroError $e){
-                    trigger_error('DIV', E_USER_WARNING);
+                } catch (DivisionByZeroError $e) {
+                    throw new DivisionByZeroError('DIVISION BY ZERO');
                 }
 
                 break;
             case 'SUB':
-                try {
-                    $arrayToSub = [];
-                    foreach ($paramInLine as $param) {
-                        array_push($arrayToSub, $param);
-                    }
-
-                    $result = $arrayToSub[0] - $arrayToSub[1];
-                } catch(Exception $e) {
-                    $e->getMessage();
+                $arrayToSub = [];
+                foreach ($paramInLine as $param) {
+                    array_push($arrayToSub, $param);
                 }
+
+                $result = $arrayToSub[0] - $arrayToSub[1];
                 break;
         }
 
@@ -125,7 +121,6 @@ class File implements FileInterface
 
         file_put_contents($contentToSave, $param);
     }
-
 
     /**
      * make file location.
