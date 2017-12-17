@@ -70,13 +70,12 @@ class File implements FileInterface
      * @param String $line
      * @return string
      */
-    public function operation(String $line): string
+    public function operation(string $line): string
     {
         $paramInLine = explode(' ', $line);
 
-        $processing = array_shift($paramInLine);
 
-        $newContent = '';
+        $processing = array_shift($paramInLine);
 
         $result = 0;
         switch ($processing) {
@@ -93,20 +92,21 @@ class File implements FileInterface
                         array_push($array, $param);
                     }
                     $result = (int) $array[0] / (int) $array[1];
-                    throw new DivisionByZeroError('DIVISION BY ZERO');
                 }catch(DivisionByZeroError $e){
-                    $result = $e->getMessage();
+                    trigger_error('DIV', E_USER_WARNING);
                 }
 
                 break;
             case 'SUB':
                 try {
+                    $arrayToSub = [];
                     foreach ($paramInLine as $param) {
-                        $result -= (int) $param;
+                        array_push($arrayToSub, $param);
                     }
-                    throw new Exception('String is not acceptable');
+
+                    $result = $arrayToSub[0] - $arrayToSub[1];
                 } catch(Exception $e) {
-                    $result =  $e->getMessage();
+                    $e->getMessage();
                 }
                 break;
         }
