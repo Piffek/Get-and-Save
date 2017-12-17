@@ -1,2 +1,3 @@
 ADD = 16
 DIV = DIVISION BY ZERO!
+SUB = String is not acceptable

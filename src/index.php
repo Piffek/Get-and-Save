@@ -3,7 +3,7 @@ require_once __DIR__.'/Autoload.php';
 
 $Location = new Location();
 
-$nameOfDirectory = $Location->setPath(__DIR__.'./');
+$nameOfDirectory = $Location->setPath(__DIR__);
 
 $file = new File($Location);
 

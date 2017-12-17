@@ -82,26 +82,37 @@ class File implements FileInterface
         switch ($processing) {
             case 'ADD':
                 foreach ($paramInLine as $param) {
-                    (string) $result += (int) $param;
+                    (int) $result += (int) $param;
                 }
 
-                $newContent .= $processing.' = '.$result."\n";
                 break;
             case 'DIV':
-                $array = [];
-                foreach ($paramInLine as $param) {
-                    array_push($array, $param);
+                try{
+                    $array = [];
+                    foreach ($paramInLine as $param) {
+                        array_push($array, $param);
+                    }
+                    $result = (int) $array[0] / (int) $array[1];
+                    throw new Exception('DIVISION BY ZERO!');
+                }catch(Exception $e){
+                    $result =  $e->getMessage();
                 }
 
-                $result = $this->checkSecondParameter($array);
-
-                $newContent .= $processing.' = '.$result."\n";
+                break;
+            case 'SUB':
+                try {
+                    foreach ($paramInLine as $param) {
+                        $result -= (int) $param;
+                    }
+                    throw new Exception('String is not acceptable');
+                } catch(Exception $e) {
+                    $result =  $e->getMessage();
+                }
                 break;
         }
 
-        return $newContent;
+        return $processing.' = '.$result."\n";;
     }
-
 
     /**
      * Save new content to file.
@@ -115,20 +126,6 @@ class File implements FileInterface
         file_put_contents($contentToSave, $param);
     }
 
-    /**
-     * If second parameter is ZERO, return statement.
-     *
-     * @param array $array
-     * @return string
-     */
-    private function checkSecondParameter(array $array) : string
-    {
-        if ((int) $array[1] === 0) {
-            return 'DIVISION BY ZERO!';
-        } else {
-            return (string) $array[0] / (string) $array[1];
-        }
-    }
 
     /**
      * make file location.
