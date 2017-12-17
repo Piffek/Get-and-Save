@@ -93,9 +93,9 @@ class File implements FileInterface
                         array_push($array, $param);
                     }
                     $result = (int) $array[0] / (int) $array[1];
-                    throw new Exception('DIVISION BY ZERO!');
-                }catch(Exception $e){
-                    $result =  $e->getMessage();
+                    throw new DivisionByZeroError('DIVISION BY ZERO');
+                }catch(DivisionByZeroError $e){
+                    $result = $e->getMessage();
                 }
 
                 break;
@@ -111,7 +111,7 @@ class File implements FileInterface
                 break;
         }
 
-        return $processing.' = '.$result."\n";;
+        return $line.' = '.$result."\n";
     }
 
     /**
