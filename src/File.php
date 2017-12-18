@@ -10,6 +10,8 @@ class File implements FileInterface
 
     private $line;
 
+    private $content;
+
     public function __construct(Location $location)
     {
         $this->location = $location;
@@ -42,9 +44,13 @@ class File implements FileInterface
      */
     public function getContentFromFile()
     {
-        $content = $this->makeLocationToFile($this->location->getPath(), $this->from);
+        $file = $this->makeLocationToFile($this->location->getPath(), $this->from);
 
-        return $this->explodeContentToArray(file_get_contents($content));
+        $opennedFile = fopen($file, 'r');
+        $this->content = fread($opennedFile, filesize($file));
+        fclose($opennedFile);
+
+        return $this->explodeContentToArray();
     }
 
     /**
@@ -52,10 +58,10 @@ class File implements FileInterface
      *
      * @param String $content
      */
-    public function explodeContentToArray(String $content)
+    public function explodeContentToArray()
     {
         $param = '';
-        $this->line = explode("\n", $content);
+        $this->line = explode("\n", (string) $this->content);
 
         foreach ($this->line as $oneLine) {
             $param .= $this->operation($oneLine);
@@ -119,7 +125,9 @@ class File implements FileInterface
     {
         $contentToSave = $this->makeLocationToFile($this->location->getPath(), $this->to);
 
-        file_put_contents($contentToSave, $param);
+        $content = fopen($contentToSave, 'w');
+        fwrite($content, $param);
+        fclose($content);
     }
 
     /**
