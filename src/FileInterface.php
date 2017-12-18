@@ -3,6 +3,6 @@
 interface FileInterface
 {
     public function getContentFromFile();
-    public function operation(String $line) : string;
+    public function operation($line);
     public function saveNewContentToFile(string $param);
 }

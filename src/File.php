@@ -12,6 +12,8 @@ class File implements FileInterface
 
     private $content;
 
+    private $countOfline;
+
     public function __construct(Location $location)
     {
         $this->location = $location;
@@ -47,27 +49,24 @@ class File implements FileInterface
         $file = $this->makeLocationToFile($this->location->getPath(), $this->from);
 
         $opennedFile = fopen($file, 'r');
-        $this->content = fread($opennedFile, filesize($file));
+
+        $text = $this->lineSet($opennedFile);
+
         fclose($opennedFile);
 
-        return $this->explodeContentToArray();
+        $this->saveNewContentToFile($text);
     }
 
-    /**
-     * Explode content any file to array and pass it to saveNewContentToFile method.
-     *
-     * @param String $content
-     */
-    public function explodeContentToArray()
+    private function lineSet($opennedFile)
     {
-        $param = '';
-        $this->line = explode("\n", (string) $this->content);
+        $lineSet = '';
 
-        foreach ($this->line as $oneLine) {
-            $param .= $this->operation($oneLine);
+        while (! feof($opennedFile)) {
+            $lineSet .= $this->operation(fgets($opennedFile));
+            $this->countOfline++;
         }
 
-        $this->saveNewContentToFile($param);
+        return $lineSet;
     }
 
     /**
@@ -76,7 +75,7 @@ class File implements FileInterface
      * @param String $line
      * @return string
      */
-    public function operation(string $line): string
+    public function operation($line)
     {
         $paramInLine = explode(' ', $line);
 
@@ -113,7 +112,7 @@ class File implements FileInterface
                 break;
         }
 
-        return $line.' = '.$result."\n";
+        return trim(preg_replace('/\s\s+/', ' ', $line)) .' = '. $result."\n";
     }
 
     /**
@@ -123,9 +122,9 @@ class File implements FileInterface
      */
     public function saveNewContentToFile(string $param)
     {
-        $contentToSave = $this->makeLocationToFile($this->location->getPath(), $this->to);
+        $fileToSave = $this->makeLocationToFile($this->location->getPath(), $this->to);
 
-        $content = fopen($contentToSave, 'w');
+        $content = fopen($fileToSave, 'w');
         fwrite($content, $param);
         fclose($content);
     }
