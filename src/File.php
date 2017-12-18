@@ -95,11 +95,7 @@ class File implements FileInterface
                     array_push($array, $param);
                 }
 
-                try {
-                    $result = (int) $array[0] / (int) $array[1];
-                } catch (DivisionByZeroError $e) {
-                    throw new DivisionByZeroError('DIVISION BY ZERO');
-                }
+                $result = $this->ifSecondParamIsZero($array);
 
                 break;
             case 'SUB':
@@ -108,11 +104,20 @@ class File implements FileInterface
                     array_push($arrayToSub, $param);
                 }
 
-                $result = $arrayToSub[0] - $arrayToSub[1];
+                $result = (int) $arrayToSub[0] - (int) $arrayToSub[1];
                 break;
         }
 
-        return trim(preg_replace('/\s\s+/', ' ', $line)) .' = '. $result."\n";
+        return trim(preg_replace('/\s\s+/', ' ', $line)).' = '.$result."\n";
+    }
+
+    private function ifSecondParamIsZero($array)
+    {
+        if ($array[1] == 0) {
+            return (new DivisionByZeroError("DIVISION BY ZERO"))->getMessage();
+        } else {
+            return (int) $array[0] / (int) $array[1];
+        }
     }
 
     /**
